@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SummerCamp>
+	<Campers>
+		<Camper>
+			<Id>1</Id>
+			<FullName>Иван Иванов</FullName>
+			<Age>12</Age>
+			<Cabin>Сосна</Cabin>
+			<Contacts>
+				<Phone>+7123456789</Phone>
+				<Email>ivan@example.com</Email>
+			</Contacts>
+			<Schedules>
+				<Schedule>
+					<Id>1</Id>
+					<ActivityId>1</ActivityId>
+					<Date>2024-07-10</Date>
+					<Time>10:00</Time>
+				</Schedule>
+			</Schedules>
+		</Camper>
+	</Campers>
+
+	<Activities>
+		<Activity>
+			<Id>1</Id>
+			<Name>Плавание</Name>
+			<Location>Бассейн</Location>
+			<Duration>60</Duration>
+			<Instructor>
+				<Name>Мария Петрова</Name>
+				<Phone>+7987654321</Phone>
+			</Instructor>
+		</Activity>
+	</Activities>
+</SummerCamp>
