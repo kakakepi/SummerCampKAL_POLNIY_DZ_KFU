@@ -18,9 +18,6 @@ namespace SummerCamp
         [Column("activity_id")]
         public int ActivityId { get; set; }
 
-        [Column("date")]
-        public DateTime Date { get; set; }
-
         [Column("time")]
         public string Time { get; set; }
 

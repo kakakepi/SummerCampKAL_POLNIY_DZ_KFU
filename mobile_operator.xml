@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SummerCamp>
 	<Campers>
+		<!-- Первый участник -->
 		<Camper>
 			<Id>1</Id>
-			<FullName>Иван Иванов</FullName>
+			<FullName>Иванов Алексей</FullName>
 			<Age>12</Age>
-			<Cabin>Сосна</Cabin>
+			<Cabin>Сосновая</Cabin>
 			<Contacts>
-				<Phone>+7123456789</Phone>
-				<Email>ivan@example.com</Email>
+				<Phone>+79051234567</Phone>
+				<Email>alex@mail.ru</Email>
 			</Contacts>
 			<Schedules>
 				<Schedule>
-					<Id>1</Id>
+					<Id>101</Id>
 					<ActivityId>1</ActivityId>
-					<Date>2024-07-10</Date>
+					<Date>2024-07-15</Date>
 					<Time>10:00</Time>
+				</Schedule>
+			</Schedules>
+		</Camper>
+
+		<!-- Второй участник -->
+		<Camper>
+			<Id>2</Id>
+			<FullName>Петрова Мария</FullName>
+			<Age>11</Age>
+			<Cabin>Берёзовая</Cabin>
+			<Contacts>
+				<Phone>+79051112233</Phone>
+				<Email>maria@mail.ru</Email>
+			</Contacts>
+			<Schedules>
+				<Schedule>
+					<Id>102</Id>
+					<ActivityId>2</ActivityId>
+					<Date>2024-07-16</Date>
+					<Time>14:00</Time>
 				</Schedule>
 			</Schedules>
 		</Camper>
 	</Campers>
 
-	<Activities>
-		<Activity>
-			<Id>1</Id>
-			<Name>Плавание</Name>
-			<Location>Бассейн</Location>
-			<Duration>60</Duration>
-			<Instructor>
-				<Name>Мария Петрова</Name>
-				<Phone>+7987654321</Phone>
-			</Instructor>
-		</Activity>
-	</Activities>
+	<!-- Activities остаются без изменений -->
 </SummerCamp>

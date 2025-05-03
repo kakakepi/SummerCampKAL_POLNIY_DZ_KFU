@@ -114,3 +114,5 @@ C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\refint\Summ
 C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\SummerCamp.pdb
 C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\SummerCamp.genruntimeconfig.cache
 C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\ref\SummerCamp.dll
+C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\SummerCamp.sourcelink.json
+C:\Mac\Home\Documents\SummerCamp\SummerCamp\obj\Debug\net9.0-windows\SummerCamp.Properties.Resources.resources

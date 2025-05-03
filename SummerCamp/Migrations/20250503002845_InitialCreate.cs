@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace SummerCamp.Data.Migrations
+namespace SummerCamp.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -54,7 +53,6 @@ namespace SummerCamp.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     camper_id = table.Column<int>(type: "integer", nullable: false),
                     activity_id = table.Column<int>(type: "integer", nullable: false),
-                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     time = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -65,7 +63,7 @@ namespace SummerCamp.Data.Migrations
                         column: x => x.activity_id,
                         principalTable: "activities",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_schedules_campers_camper_id",
                         column: x => x.camper_id,

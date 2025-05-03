@@ -24,7 +24,7 @@ namespace SummerCamp
             listSchedule.Items.Clear();
             foreach (var schedule in camper.Schedules)
             {
-                listSchedule.Items.Add($"{schedule.Date:dd.MM.yyyy} {schedule.Time} - {schedule.Activity?.Name}");
+                listSchedule.Items.Add($"{schedule.Time} - {schedule.Activity?.Name}");
             }
         }
     }

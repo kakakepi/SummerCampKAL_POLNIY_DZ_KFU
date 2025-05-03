@@ -1,4 +1,6 @@
-﻿namespace SummerCamp
+﻿using System.Windows.Forms;
+
+namespace SummerCamp
 {
     partial class MainForm
     {
@@ -29,100 +31,118 @@
         private void InitializeComponent()
         {
             splitContainer = new SplitContainer();
-            dataGridView = new DataGridView();
             treeView = new TreeView();
+            dataGridView = new DataGridView();
+            panel1 = new Panel();
+            pictureBox = new PictureBox();
             btnLoad = new Button();
             btnSaveDb = new Button();
             btnDetails = new Button();
-            pictureBox = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
+            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // splitContainer
             // 
-            splitContainer.Dock = DockStyle.Left;
+            splitContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             splitContainer.Location = new Point(0, 0);
             splitContainer.Name = "splitContainer";
             // 
             // splitContainer.Panel1
             // 
-            splitContainer.Panel1.Controls.Add(dataGridView);
             splitContainer.Panel1.Controls.Add(treeView);
             // 
             // splitContainer.Panel2
             // 
-            splitContainer.Panel2.Controls.Add(btnLoad);
-            splitContainer.Panel2.Controls.Add(btnSaveDb);
-            splitContainer.Panel2.Controls.Add(btnDetails);
-            splitContainer.Panel2.Controls.Add(pictureBox);
-            splitContainer.Size = new Size(1687, 866);
-            splitContainer.SplitterDistance = 1000;
+            splitContainer.Panel2.Controls.Add(dataGridView);
+            splitContainer.Panel2.Controls.Add(panel1);
+            splitContainer.Size = new Size(625, 321);
+            splitContainer.SplitterDistance = 131;
             splitContainer.TabIndex = 0;
-            // 
-            // dataGridView
-            // 
-            dataGridView.ColumnHeadersHeight = 46;
-            dataGridView.Location = new Point(1, 399);
-            dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersWidth = 82;
-            dataGridView.Size = new Size(473, 467);
             // 
             // treeView
             // 
-            treeView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            treeView.Location = new Point(3, 5);
+            treeView.Dock = DockStyle.Fill;
+            treeView.Location = new Point(0, 0);
             treeView.Name = "treeView";
-            treeView.Size = new Size(498, 388);
+            treeView.Size = new Size(131, 321);
             treeView.TabIndex = 0;
             treeView.AfterSelect += TreeView_AfterSelect;
             // 
+            // dataGridView
+            // 
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.ColumnHeadersHeight = 46;
+            dataGridView.Location = new Point(0, 94);
+            dataGridView.Name = "dataGridView";
+            dataGridView.ReadOnly = true;
+            dataGridView.RowHeadersWidth = 82;
+            dataGridView.Size = new Size(484, 224);
+            dataGridView.TabIndex = 9;
+            // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.Controls.Add(pictureBox);
+            panel1.Controls.Add(btnLoad);
+            panel1.Controls.Add(btnSaveDb);
+            panel1.Controls.Add(btnDetails);
+            panel1.Location = new Point(2, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(485, 91);
+            panel1.TabIndex = 5;
+            // 
+            // pictureBox
+            // 
+            pictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pictureBox.Image = Properties.Resources.maxresdefault;
+            pictureBox.Location = new Point(273, 3);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(209, 82);
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox.TabIndex = 4;
+            pictureBox.TabStop = false;
+            // 
             // btnLoad
             // 
-            btnLoad.Location = new Point(10, 5);
+            btnLoad.AutoSize = true;
+            btnLoad.Location = new Point(3, 3);
             btnLoad.Name = "btnLoad";
-            btnLoad.Size = new Size(75, 64);
+            btnLoad.Size = new Size(71, 85);
             btnLoad.TabIndex = 1;
             btnLoad.Text = "Загрузить";
-            btnLoad.Click += BtnLoad_Click;
             btnLoad.Click += BtnLoad_Click;
             // 
             // btnSaveDb
             // 
-            btnSaveDb.Location = new Point(120, 5);
+            btnSaveDb.AutoSize = true;
+            btnSaveDb.Location = new Point(165, 3);
             btnSaveDb.Name = "btnSaveDb";
-            btnSaveDb.Size = new Size(75, 67);
+            btnSaveDb.Size = new Size(102, 85);
             btnSaveDb.TabIndex = 2;
             btnSaveDb.Text = "Сохранить в БД";
             btnSaveDb.Click += BtnSaveDb_Click;
             // 
             // btnDetails
             // 
-            btnDetails.Location = new Point(237, 12);
+            btnDetails.AutoSize = true;
+            btnDetails.Location = new Point(80, 3);
             btnDetails.Name = "btnDetails";
-            btnDetails.Size = new Size(83, 57);
+            btnDetails.Size = new Size(79, 85);
             btnDetails.TabIndex = 3;
             btnDetails.Text = "Подробнее";
             btnDetails.Click += BtnDetails_Click;
             // 
-            // pictureBox
-            // 
-            pictureBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            pictureBox.Location = new Point(434, 556);
-            pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(246, 307);
-            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox.TabIndex = 4;
-            pictureBox.Image = Image.FromFile("../../../../maxresdefault.jpg");
-            pictureBox.TabStop = false;
-            // 
             // MainForm
             // 
-            ClientSize = new Size(1699, 866);
+            ClientSize = new Size(624, 321);
             Controls.Add(splitContainer);
             Name = "MainForm";
             Text = "Управление лагерем";
@@ -131,6 +151,8 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
         }
@@ -143,6 +165,6 @@
         private Button btnDetails;
         private PictureBox pictureBox;
         private Label lblStatus;
-
+        private Panel panel1;
     }
 }

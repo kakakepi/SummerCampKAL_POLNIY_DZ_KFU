@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SummerCamp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1bbb0d2883fbc90ab24ef665b054cda0222b5981")]
 [assembly: System.Reflection.AssemblyProductAttribute("SummerCamp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SummerCamp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

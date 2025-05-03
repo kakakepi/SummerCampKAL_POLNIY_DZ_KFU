@@ -1,12 +1,17 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using System.Text.Json;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+
 namespace SummerCamp
 {
     public static class DataLoader
     {
-        public static (List<Camper>, List<Activity>, List<Schedule>) LoadData(string path)
+        public static (List<Camper> Campers, List<Activity> Activities, List<Schedule> Schedules) LoadData(string path)
         {
-            return path.EndsWith(".xml")
+            return path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)
                 ? LoadFromXml(path)
                 : LoadFromJson(path);
         }
@@ -15,81 +20,171 @@ namespace SummerCamp
         {
             var doc = XDocument.Load(path);
 
-            var campers = doc.Descendants("Camper").Select(x => new Camper
-            {
-                Id = (int)x.Element("Id"),
-                FullName = (string)x.Element("FullName"),
-                Age = (int)x.Element("Age"),
-                Cabin = (string)x.Element("Cabin"),
-                Contacts = new CamperContacts
+            var activities = doc.Descendants("Activity")
+                .Select(a => new Activity
                 {
-                    Phone = (string)x.Element("Contacts")?.Element("Phone"),
-                    Email = (string)x.Element("Contacts")?.Element("Email")
-                },
-                Schedules = x.Element("Schedules")?.Elements("Schedule").Select(s => new Schedule
-                {
-                    Id = (int)s.Element("Id"),
-                    ActivityId = (int)s.Element("ActivityId"),
-                    Date = DateTime.Parse((string)s.Element("Date")),
-                    Time = (string)s.Element("Time")
-                }).ToList()
-            }).ToList();
+                    Id = (int?)a.Element("Id") ?? throw new InvalidDataException("Activity Id is required"),
+                    Name = (string)a.Element("Name") ?? "Без названия",
+                    Location = (string)a.Element("Location") ?? "Не указано",
+                    Duration = (int?)a.Element("Duration") ?? 0,
+                    Instructor = new ActivityInstructor
+                    {
+                        Name = (string)a.Element("Instructor")?.Element("Name") ?? "Инструктор не указан",
+                        Phone = (string)a.Element("Instructor")?.Element("Phone") ?? string.Empty
+                    }
+                }).ToList();
 
-            var activities = doc.Descendants("Activity").Select(x => new Activity
-            {
-                Id = (int)x.Element("Id"),
-                Name = (string)x.Element("Name"),
-                Location = (string)x.Element("Location"),
-                Duration = (int)x.Element("Duration"),
-                Instructor = new ActivityInstructor
+            var campers = doc.Descendants("Camper")
+                .Select(c =>
                 {
-                    Name = (string)x.Element("Instructor")?.Element("Name"),
-                    Phone = (string)x.Element("Instructor")?.Element("Phone")
-                }
-            }).ToList();
+                    var camperId = (int?)c.Element("Id") ?? throw new InvalidDataException("Camper Id is required");
 
-            return (campers, activities, campers.SelectMany(c => c.Schedules).ToList());
+                    var schedules = c.Element("Schedules")?.Elements("Schedule")
+                        .Select(s =>
+                        {
+                            var activityId = (int?)s.Element("ActivityId")
+                                ?? throw new InvalidDataException("ActivityId is required in Schedule");
+
+                            var foundActivity = activities.FirstOrDefault(a => a.Id == activityId);
+                            if (foundActivity == null)
+                            {
+                                Console.WriteLine($"Warning: Activity with ID {activityId} not found for Camper {camperId}. Skipping schedule.");
+                                return null;
+                            }
+
+                            return new Schedule
+                            {
+                                Id = (int?)s.Element("Id") ?? 0,
+                                ActivityId = activityId,
+                                CamperId = camperId,
+                                Time = (string)s.Element("Time") ?? "00:00",
+                                Activity = foundActivity
+                            };
+                        })
+                        .Where(schedule => schedule != null)
+                        .Cast<Schedule>()
+                        .ToList() ?? new List<Schedule>();
+
+                    return new Camper
+                    {
+                        Id = camperId,
+                        FullName = (string)c.Element("FullName") ?? "Неизвестный участник",
+                        Age = (int?)c.Element("Age") ?? 0,
+                        Cabin = (string)c.Element("Cabin") ?? "Без домика",
+                        Contacts = new CamperContacts
+                        {
+                            Phone = (string)c.Element("Contacts")?.Element("Phone") ?? string.Empty,
+                            Email = (string)c.Element("Contacts")?.Element("Email") ?? string.Empty
+                        },
+                        Schedules = schedules
+                    };
+                })
+                .ToList();
+
+            var allSchedules = campers.SelectMany(c => c.Schedules).ToList();
+            return (campers, activities, allSchedules);
         }
 
         private static (List<Camper>, List<Activity>, List<Schedule>) LoadFromJson(string path)
         {
-            var json = File.ReadAllText(path);
-            using var doc = JsonDocument.Parse(json);
+            using var stream = new FileStream(path, FileMode.Open);
+            using var doc = JsonDocument.Parse(stream);
 
-            var campers = doc.RootElement.GetProperty("Campers").EnumerateArray().Select(c => new Camper
+            var activities = new List<Activity>();
+            foreach (var a in doc.RootElement.GetProperty("Activities").EnumerateArray())
             {
-                Id = c.GetProperty("Id").GetInt32(),
-                FullName = c.GetProperty("FullName").GetString(),
-                Age = c.GetProperty("Age").GetInt32(),
-                Cabin = c.GetProperty("Cabin").GetString(),
-                Contacts = new CamperContacts
+                var activity = new Activity
                 {
-                    Phone = c.GetProperty("Contacts").GetProperty("Phone").GetString(),
-                    Email = c.GetProperty("Contacts").GetProperty("Email").GetString()
-                },
-                Schedules = c.GetProperty("Schedules").EnumerateArray().Select(s => new Schedule
-                {
-                    Id = s.GetProperty("Id").GetInt32(),
-                    ActivityId = s.GetProperty("ActivityId").GetInt32(),
-                    Date = DateTime.Parse(s.GetProperty("Date").GetString()),
-                    Time = s.GetProperty("Time").GetString()
-                }).ToList()
-            }).ToList();
+                    Id = a.TryGetProperty("Id", out var id)
+                            ? id.GetInt32()
+                            : throw new InvalidDataException("Activity Id required"),
+                    Name = a.TryGetProperty("Name", out var name)
+                            ? name.GetString()
+                            : "Без названия",
+                    Location = a.TryGetProperty("Location", out var loc)
+                            ? loc.GetString()
+                            : "Не указано",
+                    Duration = a.TryGetProperty("Duration", out var dur)
+                            ? dur.GetInt32()
+                            : 0,
+                    Instructor = new ActivityInstructor
+                    {
+                        Name = a.TryGetProperty("Instructor", out var instructorJson)
+                                ? instructorJson.GetProperty("Name").GetString() ?? "Инструктор не указан"
+                                : "Инструктор не указан",
+                        Phone = a.TryGetProperty("Instructor", out var instructorJson2)
+                                ? instructorJson2.GetProperty("Phone").GetString() ?? string.Empty
+                                : string.Empty,
+                    }
+                };
 
-            var activities = doc.RootElement.GetProperty("Activities").EnumerateArray().Select(a => new Activity
+                activities.Add(activity);
+            }
+
+            var campers = new List<Camper>();
+            foreach (var c in doc.RootElement.GetProperty("Campers").EnumerateArray())
             {
-                Id = a.GetProperty("Id").GetInt32(),
-                Name = a.GetProperty("Name").GetString(),
-                Location = a.GetProperty("Location").GetString(),
-                Duration = a.GetProperty("Duration").GetInt32(),
-                Instructor = new ActivityInstructor
+                var camperId = c.TryGetProperty("Id", out var id)
+                    ? id.GetInt32()
+                    : throw new InvalidDataException("Camper Id required");
+
+                var camper = new Camper
                 {
-                    Name = a.GetProperty("Instructor").GetProperty("Name").GetString(),
-                    Phone = a.GetProperty("Instructor").GetProperty("Phone").GetString()
+                    Id = camperId,
+                    FullName = c.TryGetProperty("FullName", out var name)
+                                ? name.GetString()
+                                : "Неизвестный участник",
+                    Age = c.TryGetProperty("Age", out var age)
+                            ? age.GetInt32()
+                            : 0,
+                    Cabin = c.TryGetProperty("Cabin", out var cabin)
+                              ? cabin.GetString()
+                              : "Без домика",
+                    Contacts = new CamperContacts
+                    {
+                        Phone = c.TryGetProperty("Contacts", out var contactsJson)
+                                ? contactsJson.GetProperty("Phone").GetString() ?? string.Empty
+                                : string.Empty,
+                        Email = c.TryGetProperty("Contacts", out var contactsJson2)
+                                ? contactsJson2.GetProperty("Email").GetString() ?? string.Empty
+                                : string.Empty,
+                    },
+                    Schedules = new List<Schedule>()
+                };
+
+                if (c.TryGetProperty("Schedules", out var schedulesJson))
+                {
+                    foreach (var s in schedulesJson.EnumerateArray())
+                    {
+                        var activityId = s.TryGetProperty("ActivityId", out var aId)
+                            ? aId.GetInt32()
+                            : throw new InvalidDataException("ActivityId required in Schedule");
+
+                        var foundActivity = activities.FirstOrDefault(a => a.Id == activityId);
+                        if (foundActivity == null)
+                        {
+                            Console.WriteLine($"Warning: Activity with ID {activityId} not found for Camper {camperId}. Skipping schedule.");
+                            continue;
+                        }
+
+                        var schedule = new Schedule
+                        {
+                            Id = s.TryGetProperty("Id", out var sId) ? sId.GetInt32() : 0,
+                            ActivityId = activityId,
+                            CamperId = camperId,
+                            Time = s.TryGetProperty("Time", out var time) ? time.GetString() : "00:00",
+                            Activity = foundActivity
+                        };
+
+                        camper.Schedules.Add(schedule);
+                    }
                 }
-            }).ToList();
 
-            return (campers, activities, campers.SelectMany(c => c.Schedules).ToList());
+                campers.Add(camper);
+            }
+
+            var allSchedules = campers.SelectMany(c => c.Schedules).ToList();
+            return (campers, activities, allSchedules);
         }
     }
 }

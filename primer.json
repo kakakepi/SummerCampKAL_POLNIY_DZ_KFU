@@ -1,0 +1,37 @@
+{
+    "Activities": [
+        {
+            "Id": 1,
+            "Name": "Футбол",
+            "Location": "Стадион",
+            "Duration": 90,
+            "Instructor": {
+                "Name": "Иванов",
+                "Phone": "+79001234567"
+            }
+        },
+        {
+            "Id": 2,
+            "Name": "Рисование",
+            "Location": "Арт-студия",
+            "Duration": 60,
+            "Instructor": {
+                "Name": "Петрова",
+                "Phone": "+79007654321"
+            }
+        }
+    ],
+    "Campers": [
+        {
+            "Id": 1,
+            "FullName": "Иванов Алексей",
+            "Schedules": [
+                {
+                    "Id": 101,
+                    "ActivityId": 1,
+                    "Time": "10:00"
+                }
+            ]
+        }
+    ]
+}
